@@ -1,0 +1,78 @@
+﻿@page "{id:int}"
+@model intermediarioDB.Pages.DetalleModel
+@{
+    ViewData["Title"] = Model.Producto?.Titulo ?? "Detalle";
+}
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success">@TempData["Mensaje"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+@if (Model.Producto != null)
+{
+    var p = Model.Producto;
+
+    <a asp-page="/Productos" class="btn btn-link ps-0 mb-3">&larr; Volver a productos</a>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            @if (!string.IsNullOrEmpty(p.Imagen))
+            {
+                <img src="~/imagenes/@p.Imagen" alt="@p.Titulo" class="img-fluid rounded"
+                     style="width:100%; max-height:450px; object-fit:cover;" />
+            }
+        </div>
+
+        <div class="col-md-6">
+            <h1 class="mb-2">@p.Titulo</h1>
+            <h3 class="fw-bold mb-3">$@p.Precio.ToString("N2") MXN</h3>
+
+            <p>@p.Descripcion</p>
+
+            <ul class="list-unstyled text-muted">
+                <li><strong>Estado:</strong> @p.Estado</li>
+                <li><strong>Publicado:</strong> @p.Fecha.ToString("dd/MM/yyyy")</li>
+                <li>
+                    <strong>Vendedor:</strong> @p.Vendedor
+                    @if (p.VendedorVerificado == "Verificado")
+                    {
+                        <span class="badge bg-success">Verificado</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Sin verificar</span>
+                    }
+                </li>
+            </ul>
+
+            @if (p.Estado == "Disponible")
+            {
+                @if (Model.UsuarioActualId == p.VendedorId)
+                {
+                    <div class="alert alert-info">Este es tu producto.</div>
+                }
+                else
+                {
+                    <div class="mb-3">
+                        <div>Producto: $@p.Precio.ToString("N2")</div>
+                        <div>Comisión del intermediario (10%): $@Model.Comision.ToString("N2")</div>
+                        <div class="fw-bold">Total a pagar: $@Model.Total.ToString("N2") MXN</div>
+                    </div>
+
+                    <form method="post" asp-page-handler="Comprar" asp-route-id="@p.Id">
+                        <button type="submit" class="btn btn-primary">Comprar</button>
+                    </form>
+                }
+            }
+            else
+            {
+                <span class="badge bg-warning text-dark">No disponible</span>
+            }
+        </div>
+    </div>
+}

@@ -1,0 +1,71 @@
+﻿@page
+@model intermediarioDB.Pages.MisVentasModel
+@{
+    ViewData["Tittle"] = "Mis Ventas";
+}
+
+<hi class="mb-4">Mis Ventas</hi>
+
+@if (TempData["Mensaje"] !=null)
+{
+    <div class="alert alert-success">@TempData["Mensaje"]</div>
+}
+@if (TempData["Error"] !=null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    @if (!Model.Transacciones.Any())
+{
+    <div class="alert alert-info">Todavia no tienes ventas.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Comprador</th>
+                    <th>Recibirás</th>
+                    <th>Estado</th>
+                    <th>Rastreo</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var t in Model.Transacciones)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(t.Imagen))
+                            {
+                                <img src="~/imagenes/@t.Imagen" alt="@t.Titulo"
+                                     style="width:60px; height:60px; object-fit:cover; border-radius:8px;" class="me-2" />
+                            }
+                            @t.Titulo
+                        </td>
+                        <td>@t.Contraparte</td>
+                        <td>$@t.MontoProducto.ToString("N2")</td>
+                        <td><span class="badge @t.Estado">@t.EstadoTexto</span></td>
+                        <td>@(string.IsNullOrEmpty(t.Rastreo) ? "—" : t.Rastreo)</td>
+                        <td>
+                            @if (t.Estado == "PagoRetenidoEnGarantia")
+                            {
+                                <form method="post" asp-page-handler="Enviar" asp-route-id="@t.Id" class="d-flex gap-2">
+                                    <input type="text" name="codigo" class="form-control form-control-sm"
+                                           placeholder="Código de rastreo" maxlength="100" required />
+                                    <button type="submit" class="btn btn-primary btn-sm text-nowrap">Marcar enviado</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+}
+
+
+  

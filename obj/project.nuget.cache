@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "gszj9Svg6Kk=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\isaic\\Downloads\\intermediarioDBfin\\intermediarioDB\\intermediarioDB.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\isaic\\.nuget\\packages\\mysqlconnector\\2.6.2\\mysqlconnector.2.6.2.nupkg.sha512"
+  ],
+  "logs": []
+}

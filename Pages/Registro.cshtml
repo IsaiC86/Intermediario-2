@@ -1,0 +1,45 @@
+﻿@page
+@model intermediarioDB.Pages.RegistroModel
+@{
+    ViewData["Title"] = "Registro";
+}
+<h1>Registro de usuario</h1>
+
+@if (!string.IsNullOrEmpty(Model.Mensaje))
+{
+<div class="alert alert-info">@Model.Mensaje</div>
+}
+<form method="post" style="max-width:420px">
+<div class="mb-3">
+    <label asp-for="NombreCompleto" class="form-label"></label>
+        <input asp-for="NombreCompleto" class="form-control" />
+        <span asp-validation-for="NombreCompleto" class="text-danger"></span>
+</div>
+<div class="mb-3">
+<label asp-for="Correo" class="form-label"></label>
+<input asp-for="Correo" class="form-control"/>
+<span asp-validation-for="Correo" class="text-danger"></span>
+</div>
+        <div class="mb-3">
+            <label asp-for="Telefono" class="form-label"></label>
+            <input asp-for="Telefono" class="form-control" />
+            <span asp-validation-for="Telefono" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" type="password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="ConfirmarPassword" class="form-label"></label>
+            <input asp-for="ConfirmarPassword" type="password" class="form-control" />
+            <span asp-validation-for="ConfirmarPassword" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Registrarme</button>
+    </form>
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+

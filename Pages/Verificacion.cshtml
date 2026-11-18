@@ -1,0 +1,67 @@
+﻿@page
+@model intermediarioDB.Pages.VerificacionModel
+
+@{
+    ViewData["Title"] = "Verificación de usuarios";
+}
+
+<h1 class="mb-4">Verificación de usuarios</h1>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success">@TempData["Mensaje"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="table-responsive">
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th>Estado</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var u in Model.Usuarios)
+            {
+                <tr>
+                    <td>@u.Nombre</td>
+                    <td>@u.Correo</td>
+                    <td>@(string.IsNullOrEmpty(u.Telefono) ? "—" : u.Telefono)</td>
+                    <td>
+                        @if (u.Estado == "Verificado")
+                        {
+                            <span class="badge bg-success">Verificado</span>
+                        }
+                        else if (u.Estado == "Rechazado")
+                        {
+                            <span class="badge bg-danger">Rechazado</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">Pendiente</span>
+                        }
+                    </td>
+                    <td>
+                        <form method="post" asp-page-handler="Cambiar" asp-route-id="@u.Id" class="d-flex gap-2">
+                            @if (u.Estado != "Verificado")
+                            {
+                                <button type="submit" name="estado" value="Verificado" class="btn btn-primary btn-sm">Verificar</button>
+                            }
+                            @if (u.Estado != "Rechazado")
+                            {
+                                <button type="submit" name="estado" value="Rechazado" class="btn btn-outline-danger btn-sm">Rechazar</button>
+                            }
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

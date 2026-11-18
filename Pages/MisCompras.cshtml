@@ -1,0 +1,71 @@
+﻿@page
+@model intermediarioDB.Pages.MisComprasModel
+@{
+    ViewData["Title"] = "Mis compras";
+}
+
+<h1 class="mb-4">Mis compras</h1>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success">@TempData["Mensaje"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+@if (!Model.Transacciones.Any())
+{
+    <div class="alert alert-info">Todavía no has comprado nada. <a asp-page="/Productos">Ver productos</a></div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Vendedor</th>
+                    <th>Total pagado</th>
+                    <th>Estado</th>
+                    <th>Rastreo</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var t in Model.Transacciones)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(t.Imagen))
+                            {
+                                <img src="~/imagenes/@t.Imagen" alt="@t.Titulo"
+                                     style="width:60px; height:60px; object-fit:cover; border-radius:8px;" class="me-2" />
+                            }
+                            <a asp-page="/Detalle" asp-route-id="@t.ProductoId">@t.Titulo</a>
+                        </td>
+                        <td>@t.Contraparte</td>
+                        <td>$@t.Total.ToString("N2")</td>
+                        <td><span class="badge @t.Estado">@t.EstadoTexto</span></td>
+                        <td>@(string.IsNullOrEmpty(t.Rastreo) ? "—" : t.Rastreo)</td>
+                        <td>
+                            @if (t.Estado == "Enviado")
+                            {
+                                <form method="post" asp-page-handler="Recibido" asp-route-id="@t.Id" class="d-inline">
+                                    <button type="submit" class="btn btn-primary btn-sm">Recibí conforme</button>
+                                </form>
+                            }
+                            else if (t.Estado == "PagoRetenidoEnGarantia")
+                            {
+                                <form method="post" asp-page-handler="Cancelar" asp-route-id="@t.Id" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">Cancelar</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

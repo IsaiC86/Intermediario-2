@@ -1,0 +1,43 @@
+﻿@page
+@model intermediarioDB.Pages.ProductosModel
+@{
+    ViewData["Title"] = "Productos";
+}
+
+<h1 class="mb-2">Productos</h1>
+<p class="text-muted mb-4">Aquí se ecnuentran los productos disponibles.</p>
+
+@if (!string.IsNullOrEmpty(Model.Error))
+{
+    <div class="alert alert-danger">@Model.Error</div>
+}
+else if (!Model.Productos.Any())
+{
+    <div class="alert alert-info">Todavía no hay productos publicados.</div>
+}
+
+<div class="row g-4">
+    @foreach (var p in Model.Productos)
+    {
+        <div class="col-md-4">
+            <div class="card h-100">
+                @if (!string.IsNullOrEmpty(p.Imagen))
+                {
+                    <img src="~/imagenes/@p.Imagen" class="card-img-top" alt="@p.Titulo"
+                         style="height:300px; object-fit:cover;" />
+                }
+                <div class="card-body">
+                    <h5 class="card-title">@p.Titulo</h5>
+                    <p class="card-text">@p.Descripcion</p>
+                    <p class="fw-bold">$@p.Precio.ToString("N2") MXN</p>
+                    <a asp-page="/Detalle" asp-route-id="@p.Id" class="btn btn-primary">Ver detalle</a>
+                    <a href="#" class="btn btn-primary">Comprar</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+
